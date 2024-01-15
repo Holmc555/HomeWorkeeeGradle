@@ -1,0 +1,35 @@
+plugins {
+    id 'java'
+}
+
+group = 'com.homework2'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.9.1')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    implementation 'com.google.code.gson:gson:2.8.6'
+}
+
+tasks.register('fatJar', Jar) {
+    archiveBaseName.set('JarFileGradle')
+    archiveClassifier.set('')
+    archiveVersion.set('')
+
+    manifest {
+        attributes 'Main-Class': 'com.homework2.Main'
+    }
+
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    with tasks.jar
+}
+
+test {
+    useJUnitPlatform()
+}
